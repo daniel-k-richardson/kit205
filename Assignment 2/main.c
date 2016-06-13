@@ -51,11 +51,11 @@ int main()
 }
 
 
-/*	populate_graph: Populates the graph via text file input
+/* populate_graph: Populates the graph via text file input
  *
- *	Params: the graph to populate and the size of the graph
+ * Params: the graph to populate and the size of the graph
  *
- *	Returns: void.
+ * Returns: void.
  */
 void populate_graph(Graph self)
 {
@@ -67,18 +67,18 @@ void populate_graph(Graph self)
 	int to_vertex;
 	int weight;
 
-	/*	Currently have an empty graph of vertex, loop through each
-	 *	vertex to assign each vertex its values from the input file,
-	 *	such as its state and what edges it has.
+	/* Currently have an empty graph of vertex, loop through each
+	 * vertex to assign each vertex its values from the input file,
+	 * such as its state and what edges it has.
 	 */
 	for (int i = 0; i < self.V; i++) {
 		scanf("%d ", &state);
 		self.state[i] = state;
 		scanf("%d", &outdegrees);
 
-		/*	loops through the number of out degree edges the vertex has
-		 *	so that the edge, the weight and what the edge connects to
-		 *	can be added to the vertex's edge-list for later use. 
+		/* loops through the number of out degree edges the vertex has
+		 * so that the edge, the weight and what the edge connects to
+		 * can be added to the vertex's edge-list for later use. 
 		 */
 		for (int j = 0; j < outdegrees; j++) {
 			scanf("%d, %d", &to_vertex, &weight);
@@ -99,19 +99,19 @@ int *get_indegree(Graph self)
 	EdgeList current;	// used to traverse through the vertex's edge lists.
 	int *indegree = malloc(self.V * sizeof(int));
 
-	/*	when malloc'd the array it is filled 
-	 *	with junk values and I want to increment by
-	 *	1 each time an edge points to a vertex.  
+	/* when malloc'd the array it is filled 
+	 * with junk values and I want to increment by
+	 * 1 each time an edge points to a vertex.  
 	 */
 	for (int i = 0; i < self.V; i++) {
 		indegree[i] = 0;
 	}
 
-	/*	Each vertex is an index position in an array (Graph). To
-	 *	get the indegree, go through all the vertex's edge-list
-	 *	to find the toVertex variable and use that to increment
-	 *	the indgree array at the toVertex position.
-	 *	i.e if toVertex = 3 then indegree[3]++ 
+	/* Each vertex is an index position in an array (Graph). To
+	 * get the indegree, go through all the vertex's edge-list
+	 * to find the toVertex variable and use that to increment
+	 * the indgree array at the toVertex position.
+	 * i.e if toVertex = 3 then indegree[3]++ 
 	 */
 	for (int i = 0; i < self.V; i++) {
 		current = self.edges[i];
@@ -143,9 +143,9 @@ int *topological_sort(Graph self, int indegrees[])
 	const int DISCOVERED = -1;
 	int array_size = self.V;
 
-	/*	Cloning indegrees because when this function is finished all indexes will
-	 *	have the value -1 and  the original values in indegrees are needed later 
-	 *	for updating the graph state. */
+	/* Cloning indegrees because when this function is finished all indexes will
+	 * have the value -1 and  the original values in indegrees are needed later 
+	 * for updating the graph state. */
 	int *indegree_clone = clone_array(indegrees, array_size);
 	int *sorted_graph = malloc(array_size * sizeof(int));
 
@@ -163,15 +163,15 @@ int *topological_sort(Graph self, int indegrees[])
 				indegree_clone[edge] = DISCOVERED;
 			}
 		}
-		/*	After the first pass of getting the vertexs that have no indegrees.
-		 *  The queue should have at least one vertex to start (if a correct DAG).
-		 *  If the queue is empty we have a cycle and topological sort fails.
+		/* After the first pass of getting the vertexs that have no indegrees.
+		 * The queue should have at least one vertex to start (if a correct DAG).
+		 * If the queue is empty we have a cycle and topological sort fails.
 		 *  
-		 *  The logic that follows is: remove the vertex with 0 and traverse its
-		 *  edge list to find what vertexes it has an edge to. I've done it this 
-		 *	way because we can use the toVertex value as the index position for 
-		 *	the indegree array and decrement it by 1. Once it's finished we can 
-		 *	had the vertex to the sorted graph which can later be used as an index.
+		 * The logic that follows is: remove the vertex with 0 and traverse its
+		 * edge list to find what vertexes it has an edge to. I've done it this 
+		 * way because we can use the toVertex value as the index position for 
+		 * the indegree array and decrement it by 1. Once it's finished we can 
+		 * had the vertex to the sorted graph which can later be used as an index.
 		 */
 		if (!is_empty(queue)) {
 			sorted_graph[vertex] = remove_from_queue(&queue);
@@ -189,17 +189,17 @@ int *topological_sort(Graph self, int indegrees[])
 	return (sorted_graph);
 }
 
-/*	update_state: update the vertex states: for each vertex in the graph find the
-*	edges that are connected to it and keep a running tally of the weight
-*	multiplied by the state. When no more edges to the vertex exist, check the
-*	tally. if the tally is positive assign 1 to the correct vertex position in
-*	the graphs state array. Otherwise assign 0. If there are no indegrees leave
-*	the state as it is.
+/* update_state: update the vertex states: for each vertex in the graph find the
+* edges that are connected to it and keep a running tally of the weight
+* multiplied by the state. When no more edges to the vertex exist, check the
+* tally. if the tally is positive assign 1 to the correct vertex position in
+* the graphs state array. Otherwise assign 0. If there are no indegrees leave
+* the state as it is.
 *
-*	Params: the graph to update the state of. The topologically sorted graph array
-*	An array of indegrees.
+* Params: the graph to update the state of. The topologically sorted graph array
+* An array of indegrees.
 *
-*	Returns: void.
+* Returns: void.
 */
 void update_state(Graph self, int sorted_graph[], int indegrees[])
 {
@@ -210,17 +210,17 @@ void update_state(Graph self, int sorted_graph[], int indegrees[])
 	EdgeList current = NULL;
 
 	/* Traverse through the topologically sorted graph array because it should be in order
-		of dependency which means that at any given point, vertex n should only have edges
-		pointing to it from the previous vertexs. For example, the vertex found at the index
-		position 2 (in sorted graph) should only have in edges from vertexs stored in 0 and 1.*/
+	   of dependency which means that at any given point, vertex n should only have edges
+	   pointing to it from the previous vertexs. For example, the vertex found at the index
+	   position 2 (in sorted graph) should only have in edges from vertexs stored in 0 and 1.*/
 	for (int i = 0; i < self.V; i++) {
 		vertex = sorted_graph[i];
 		num_indegree = indegrees[vertex];
 		input = 0;
 
-		/*	Searches all the vertexes edges by selecting all the vertexs between the ranges of
-		 *	0 up to the current vertex position in the topoglically sorted graph array. Using
-		 *	the value of i keeps track of where we are in the topologically sorted graph array */
+		/* Searches all the vertexes edges by selecting all the vertexs between the ranges of
+		 * 0 up to the current vertex position in the topoglically sorted graph array. Using
+		 * the value of i keeps track of where we are in the topologically sorted graph array */
 		for (int j = 0; j < i; j++) {
 			place_to_search = sorted_graph[j];
 			current = self.edges[place_to_search];
@@ -236,12 +236,12 @@ void update_state(Graph self, int sorted_graph[], int indegrees[])
 			}
 		}
 		/* Added the extra check before updating vertex state because there are occasions when
-		 *	the vertex state should not be changed (if the vertex has no indegrees state should
-		 *	keep its original state value). However, if this is removed input is assigned to 0 
-		 *	before each inner loop (to find edges to vertexs) if the indegrees is 0 the inner
-		 *	loop is skipped and so input is always 0. A vertex state will only be 1 if all edges
-		 *	connected to it are also one. If our starting vertex state is set to 0 all vertex
-		 *	state values will become 0. */ 
+		 * the vertex state should not be changed (if the vertex has no indegrees state should
+		 * keep its original state value). However, if this is removed input is assigned to 0 
+		 * before each inner loop (to find edges to vertexs) if the indegrees is 0 the inner
+		 * loop is skipped and so input is always 0. A vertex state will only be 1 if all edges
+		 * connected to it are also one. If our starting vertex state is set to 0 all vertex
+		 * state values will become 0. */ 
 		if (num_indegree != 0) {
 			if (input > 0) {
 				self.state[vertex] = 1;
